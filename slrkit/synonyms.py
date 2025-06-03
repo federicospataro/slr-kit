@@ -92,18 +92,22 @@ def replace_synonyms(content, file_name):
 
     synonyms = json.loads(content)
 
-    with open(file_name, "r", errors='ignore', encoding="utf-8") as file:
-        postproc_text = file.read()
+    df = pd.read_csv(file_name, sep="\t", encoding="utf-8")
+
+    df['abstract_filtered_new'] = df['abstract_filtered']
 
     for synonym_group in synonyms:
         all_synonyms = "_".join(synonym_group)
 
         for replacement in synonym_group:
-            postproc_text = re.sub(r'\b' + re.escape(replacement) + r'\b', all_synonyms, postproc_text)
+            df['abstract_filtered'] = df['abstract_filtered'].apply(
+                lambda x: re.sub(r'\b' + re.escape(replacement) + r'\b', all_synonyms, x)
+            )
+    
+    df.rename(columns={'abstract_filtered': 'abstract_filtered_old'}, inplace=True)
+    df.rename(columns={'abstract_filtered_new': 'abstract_filtered'}, inplace=True)
 
-    with open(new_file, "w", encoding="utf-8") as file:
-        file.write(postproc_text)
-
+    df.to_csv(new_file, sep="\t", index=False, encoding="utf-8")
 
 
 def run_synonyms(args):
