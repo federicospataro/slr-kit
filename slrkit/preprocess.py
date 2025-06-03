@@ -463,9 +463,12 @@ def preprocess_item(item, relevant_terms, stopwords, acronyms, language='en',
     text = item
     acro_from_text = extract_abbreviation_definition_pairs(doc_text=text)
     pl_list = []
-    for a in acro_from_text:
-        text = re.sub(rf'\b{a}\b', f'@{acro_dict[a]}@', text)
-        pl_list.append((a, acro_dict[a]))
+    try: #FIX
+        for a in acro_from_text:
+            text = re.sub(rf'\b{a}\b', f'@{acro_dict[a]}@', text)
+            pl_list.append((a, acro_dict[a]))
+    except: #FIX
+        pass #FIX
 
     # Convert to lowercase
     text = text.lower()

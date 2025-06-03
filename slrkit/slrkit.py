@@ -30,11 +30,15 @@ SCRIPTS = {
                    'additional_init': True, 'no_config': False},
     'terms_generate': {'module': 'gen_terms', 'depends': ['preprocess'],
                        'additional_init': False, 'no_config': False},
+    'garbage': {'module': 'garbage', 'depends': ['terms_generate'],
+                       'additional_init': False, 'no_config': False},
     'fawoc_terms': {'module': 'fawoc.fawoc', 'depends': ['terms_generate'],
                     'additional_init': False, 'no_config': False},
     'fawoc_acronyms': {'module': 'fawoc.fawoc', 'depends': ['acronyms'],
                        'additional_init': False, 'no_config': False},
     'fawoc_journals': {'module': 'fawoc.fawoc', 'depends': ['journals_extract'],
+                       'additional_init': False, 'no_config': False},
+    'synonyms': {'module': 'synonyms', 'depends': ['terms_generate'],
                        'additional_init': False, 'no_config': False},
     'postprocess': {'module': 'postprocess',
                     'depends': ['preprocess', 'terms_generate'],
@@ -541,6 +545,43 @@ def run_preproc(args):
 
     os.chdir(args.cwd)
     preprocess(cmd_args)
+
+
+def run_garbage(args):
+    confname = 'garbage.toml'
+    config_dir, meta = check_project(args.cwd)
+    config = load_configfile(config_dir / confname)
+    from garbage import run_garbage, init_argparser as garbage_argparse
+    script_args = garbage_argparse().slrkit_arguments
+    cmd_args, inputs, _ = prepare_script_arguments(config, config_dir, confname,
+                                                   script_args)
+    msgs = check_dependencies(inputs, 'garbage', args.cwd)
+    if msgs:
+        for m in msgs:
+            print(m)
+        sys.exit(1)
+
+    os.chdir(args.cwd)
+    run_garbage(cmd_args)
+
+
+def run_synonyms(args):
+    confname = 'synonyms.toml'
+    config_dir, meta = check_project(args.cwd)
+    config = load_configfile(config_dir / confname)
+    from synonyms import run_synonyms, init_argparser as synonyms_argparse
+    script_args = synonyms_argparse().slrkit_arguments
+    cmd_args, inputs, _ = prepare_script_arguments(config, config_dir, confname,
+                                                   script_args)
+    msgs = check_dependencies(inputs, 'synonyms', args.cwd)
+    if msgs:
+        for m in msgs:
+            print(m)
+        sys.exit(1)
+
+    os.chdir(args.cwd)
+    run_synonyms(cmd_args)
+
 
 
 def run_postprocess(args):
@@ -1255,6 +1296,17 @@ def subparser_preproc(subparser):
                                           description=help_str)
     parser_preproc.set_defaults(func=run_preproc)
 
+def subparser_garbage(subparser):
+    help_str = 'Use LLM to label garbage terms'
+    parser_preproc = subparser.add_parser('garbage', help=help_str,
+                                          description=help_str)
+    parser_preproc.set_defaults(func=run_garbage)
+
+def subparser_synonyms(subparser):
+    help_str = 'Use LLM to search and replace synonyms'
+    parser_preproc = subparser.add_parser('synonyms', help=help_str,
+                                          description=help_str)
+    parser_preproc.set_defaults(func=run_synonyms)
 
 def subparser_postproc(subparser):
     help_str = 'Run the postprocess stage in a slr-kit project'
@@ -1362,8 +1414,12 @@ def init_argparser():
     subparser_preproc(subparser)
     # terms
     subparser_terms(subparser)
+    #garbage
+    subparser_garbage(subparser)
     # fawoc
     subparser_fawoc(subparser)
+    # synonyms
+    subparser_synonyms(subparser)
     # postprocess
     subparser_postproc(subparser)
     # lda

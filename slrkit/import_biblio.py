@@ -67,6 +67,14 @@ def ris2csv(args):
         with open(args.input_file, 'r', encoding='utf-8') as bibliography_file:
             entries = readris(bibliography_file)
             risdf = pd.DataFrame(entries)
+
+            #FIX MIO
+            if 'primary_title' in risdf.columns:
+                risdf.rename(columns={'primary_title': 'title'}, inplace=True)
+
+            if 'journal_name' in risdf.columns:
+                risdf.rename(columns={'journal_name': 'journal'}, inplace=True)
+      
     except FileNotFoundError:
         import pathlib
         msg = 'Error: input file {!r} not found'
@@ -94,7 +102,14 @@ def ris2csv(args):
 
     # The number of citations lies in 'notes' column as element of a list
     # The ris_citations extracts that information
-    risdf['citations'] = risdf['notes'].apply(ris_citations)
+
+    #risdf['citations'] = risdf['notes'].apply(ris_citations)
+
+    #FIX
+    if 'notes' in risdf.columns:
+        risdf['citations'] = risdf['notes'].apply(ris_citations)
+    else:
+        risdf['citations'] = ''
 
     cols = args.columns.split(',')
     # checks if help was requested
