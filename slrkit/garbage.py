@@ -27,6 +27,12 @@ def init_argparser():
                     help='access token to LLM')
     parser.add_argument('threshold', action='store', type=int,
                     help='threshold above which a term is considered garbage (between 1 and 10)', default=7)
+    parser.add_argument('base_prompt', action='store', type=str,
+                    help='base prompt used for asking to llm', default="""Garbage terms are incomplete or meaningless n-grams, such as fragments like "of a" "in a" or "set of" which depend on additional context to be meaningful, malformed phrases or partial expressions, unnatural n-grams that appear to be cut off or syntactically incomplete; valid terms are well-formed concepts like "machine learning" "language processing" "natural language understanding" even if they contain common words because they are well-formed concepts; return only the clearly garbage terms from the list, separated by commas; be conservative and do not classify a term as garbage unless it is clearly malformed or lacks standalone meaning; identify the garbage terms from the given list: """)
+    parser.add_argument('score_prompt', action='store', type=str,
+                    help='score prompt used for asking to llm', default="""Garbage terms are terms that by themselves do not have a meaningful meaning, and that should be inserted into a sentence to gain value. Or garbage terms are poorly formed n-grams that carry articles in front or after the words.
+For each term below, assign a score from 1 to 10 indicating how likely it is to be a garbage term, where 1 means "definitely not garbage" and 10 means "clearly garbage". Answer (without adding comments) returning the results in the format: term1:score,term2:score,term3:score
+The terms you need to score are as follows: """)
 
     return parser
 
@@ -103,12 +109,12 @@ def read_terms(file_name):
     return term_str
 
 
-def build_prompt(score_mode, file_name):
+def build_prompt(score_mode, file_name, base_prompt, score_prompt):
     
     if score_mode:
-        return score_prompt() + read_terms(file_name)
+        return score_prompt + read_terms(file_name)
     
-    return base_prompt() + read_terms(file_name)
+    return base_prompt + read_terms(file_name)
 
 
 def assign_labels(score_mode, content, file_name, threshold):
@@ -127,7 +133,7 @@ def assign_labels(score_mode, content, file_name, threshold):
 
 def run_garbage(args):
 
-    prompt = build_prompt(args.score_mode, args.terms_file)
+    prompt = build_prompt(args.score_mode, args.terms_file, args.base_prompt, args.score_prompt)
     print("Prompt:\n"+prompt)
     print("Starting LLM...")
     content = run_prompt(prompt, args.url, args.model, args.token)

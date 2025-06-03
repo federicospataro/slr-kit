@@ -25,12 +25,8 @@ def init_argparser():
                     help='http://localhost:11434/api/generate  for Ollama')
     parser.add_argument('token', action='store', type=str,
                     help='access token to LLM')
-
-    return parser
-
-
-def get_prompt():
-    return """I give you a series of terms that can be single or n gram of multiple words (separated by _).
+    parser.add_argument('prompt', action='store', type=str,
+                    help='prompt used for asking to llm', default="""I give you a series of terms that can be single or n gram of multiple words (separated by _).
 You have to identify which of these terms are synonyms and have the same meaning.
 It is not always true that synonyms exist, but if there are you have to find them and they must be correct.
 Respond in json format (without adding other comments) grouping together the terms that are synonyms. For example: 
@@ -40,7 +36,9 @@ Respond in json format (without adding other comments) grouping together the ter
 ]
 You do NOT have to return all the terms divided into various groups, but only group those that are strongly synonymous.
 If n-grams contain the same word within them, it does not mean that they are synonymous.
-These are the terms between which you have to find synonyms: """
+These are the terms between which you have to find synonyms: """)
+
+    return parser
 
 
 def run_prompt(prompt_content, url, model, token):
@@ -85,12 +83,9 @@ def read_terms(file_name):
 
 
 
-def build_prompt(file_name):
-    return get_prompt() + read_terms(file_name)
+def build_prompt(file_name, prompt):
+    return prompt + read_terms(file_name)
 
-
-import json
-import re
 
 def replace_synonyms(content, file_name):
     new_file = file_name
@@ -112,7 +107,7 @@ def replace_synonyms(content, file_name):
 
 
 def run_synonyms(args):
-    prompt = build_prompt(args.terms_file)
+    prompt = build_prompt(args.terms_file, args.prompt)
     print("Prompt:\n"+prompt)
     print("Starting LLM...")
     content = run_prompt(prompt, args.url, args.model, args.token)
