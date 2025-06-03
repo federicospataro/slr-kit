@@ -35,16 +35,7 @@ For each term below, assign a score from 1 to 10 indicating how likely it is to 
 The terms you need to score are as follows: """)
 
     return parser
-
-
-def base_prompt():
-    return """Garbage terms are incomplete or meaningless n-grams, such as fragments like "of a" "in a" or "set of" which depend on additional context to be meaningful, malformed phrases or partial expressions, unnatural n-grams that appear to be cut off or syntactically incomplete; valid terms are well-formed concepts like "machine learning" "language processing" "natural language understanding" even if they contain common words because they are well-formed concepts; return only the clearly garbage terms from the list, separated by commas; be conservative and do not classify a term as garbage unless it is clearly malformed or lacks standalone meaning; identify the garbage terms from the given list: """
-
-def score_prompt():
-    return """Garbage terms are terms that by themselves do not have a meaningful meaning, and that should be inserted into a sentence to gain value. Or garbage terms are poorly formed n-grams that carry articles in front or after the words.
-For each term below, assign a score from 1 to 10 indicating how likely it is to be a garbage term, where 1 means "definitely not garbage" and 10 means "clearly garbage". Answer (without adding comments) returning the results in the format: term1:score,term2:score,term3:score
-The terms you need to score are as follows: """
-
+    
 
 def run_prompt(prompt_content, url, model, token):
 
