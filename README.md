@@ -85,8 +85,11 @@ slrkit commands:
     preprocess          Run the preprocess stage in a slr-kit project
     terms               Subcommand to extract and handle lists of terms in a slr-kit project. This
                         command accepts a subcommand. If none is given, "generate" is assumed.
+    regexfilter         Use regex to label garbage terms
+    garbage             Use LLM to label garbage terms
     fawoc               Run fawoc in a slr-kit project. This command accepts a subcommand. If none is
                         given "terms" is assumed.
+    synonyms            Use LLM to search and replace synonyms
     postprocess         Run the postprocess stage in a slr-kit project
     topics              Subcommand to extract the topics from the documents in a slrkit project. This
                         command requires a subcommand.
