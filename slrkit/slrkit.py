@@ -30,6 +30,8 @@ SCRIPTS = {
                    'additional_init': True, 'no_config': False},
     'terms_generate': {'module': 'gen_terms', 'depends': ['preprocess'],
                        'additional_init': False, 'no_config': False},
+    'regexfilter': {'module': 'regexfilter', 'depends': ['terms_generate'],
+                       'additional_init': False, 'no_config': False},
     'garbage': {'module': 'garbage', 'depends': ['terms_generate'],
                        'additional_init': False, 'no_config': False},
     'fawoc_terms': {'module': 'fawoc.fawoc', 'depends': ['terms_generate'],
@@ -545,6 +547,24 @@ def run_preproc(args):
 
     os.chdir(args.cwd)
     preprocess(cmd_args)
+
+
+def run_regexfilter(args):
+    confname = 'regexfilter.toml'
+    config_dir, meta = check_project(args.cwd)
+    config = load_configfile(config_dir / confname)
+    from regexfilter import run_regexfilter, init_argparser as regexfilter_argparse
+    script_args = regexfilter_argparse().slrkit_arguments
+    cmd_args, inputs, _ = prepare_script_arguments(config, config_dir, confname,
+                                                   script_args)
+    msgs = check_dependencies(inputs, 'regexfilter', args.cwd)
+    if msgs:
+        for m in msgs:
+            print(m)
+        sys.exit(1)
+
+    os.chdir(args.cwd)
+    run_regexfilter(cmd_args)
 
 
 def run_garbage(args):
@@ -1296,6 +1316,12 @@ def subparser_preproc(subparser):
                                           description=help_str)
     parser_preproc.set_defaults(func=run_preproc)
 
+def subparser_regexfilter(subparser):
+    help_str = 'Use regex to label garbage terms'
+    parser_preproc = subparser.add_parser('regexfilter', help=help_str,
+                                          description=help_str)
+    parser_preproc.set_defaults(func=run_regexfilter)
+
 def subparser_garbage(subparser):
     help_str = 'Use LLM to label garbage terms'
     parser_preproc = subparser.add_parser('garbage', help=help_str,
@@ -1414,6 +1440,8 @@ def init_argparser():
     subparser_preproc(subparser)
     # terms
     subparser_terms(subparser)
+    #regexfilter
+    subparser_regexfilter(subparser)
     #garbage
     subparser_garbage(subparser)
     # fawoc
