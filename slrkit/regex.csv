@@ -1,0 +1,67 @@
+regex	description
+^\ba\b	'a’ as the first word of the string
+\ba\b$	'a’ as the last word of the string
+^\bof\b	'of’ as the first word of the string
+\bof\b$	'of’ as the last word of the string
+^\bthe\b	'the’ as the first word of the string
+\bthe\b$	'the’ as the last word of the string
+^\s	space as the first character of the string
+\s$	space as the last character of the string
+^\bis\b	'is’ as the first word of the string
+\bis\b$	'is’ as the last word of the string
+^\bare\b	'are’ as the first word of the string
+\bare\b$	'are’ as the last word of the string
+^\bbe\b	'be’ as the first word of the string
+\bbe\b$	'be’ as the last word of the string
+^\bwas\b	'was’ as the first word of the string
+\bwas\b$	'was’ as the last word of the string
+^\bwere\b	'were’ as the first word of the string
+\bwere\b$	'were’ as the last word of the string
+^\bhave\b	'have’ as the first word of the string
+\bhave\b$	'have’ as the last word of the string
+^\bhas\b	'has’ as the first word of the string
+\bhas\b$	'has’ as the last word of the string
+^\band\b	'and’ as the first word of the string
+\band\b$	'and’ as the last word of the string
+^\bto\b	'to’ as the first word of the string
+\bto\b$	'to’ as the last word of the string
+^\bfor\b	'for’ as the first word of the string
+\bfor\b$	'for’ as the last word of the string
+^\bwith\b	'with’ as the first word of the string
+\bwith\b$	'with’ as the last word of the string
+^\bin\b	'in’ as the first word of the string
+\bin\b$	'in’ as the last word of the string
+^\bwas\b	'was’ as the first word of the string
+\bwas\b$	'was’ as the last word of the string
+^\bor\b	'or’ as the first word of the string
+\bor\b$	'or’ as the last word of the string
+^\bon\b	'on’ as the first word of the string
+\bon\b$	'on’ as the last word of the string
+^\bby\b	'by’ as the first word of the string
+\bby\b$	'by’ as the last word of the string
+^\bat\b	'at’ as the first word of the string
+\bat\b$	'at’ as the last word of the string
+^\bfrom\b	'from’ as the first word of the string
+\bfrom\b$	'from’ as the last word of the string
+^\bnot\b	'not’ as the first word of the string
+\bnot\b$	'not’ as the last word of the string
+^\bif\b	'if' as the first word of the string
+\bif\b$	'if’ as the last word of the string
+^\baim\b	'aim’ as the first word of the string
+\baim\b$	'aim’ as the last word of the string
+provides$	'provides’ as last word of the string
+requires$	'requires’ as last word of the string
+al$	term ends in -al
+^\w+ed\b$	single word in the string ends in -ed
+^\w+tion\b$	single word in the string ends in -tion
+^\w+ly\b$	single word in the string ends in -ly
+^\w+able\b$	single word in the string ends in -able
+^\w+ous\b$	single word in the string ends in -ous
+^\w+come\b$	single word in the string ends in -come
+^.$	term is a single character
+\betc\b	'etc’ in the term
+\bmore\b	'more’ in the term
+\bdifferent\b	'different’ in the term
+\bvarious\b	'various’ in the term
+\bused\b	'used’ in the term
+\bsmall	'small’ as first substring in a word in the string
